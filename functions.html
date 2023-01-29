@@ -1,0 +1,321 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>Camera Calibration Toolbox for Matlab</TITLE>
+<!-- Changed by: Jean-Yves Bouguet, 29-Dec-1999 -->
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.0Gold (X11; U; SunOS 4.1.3_U1 sun4m) [Netscape]">
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000FF" ALINK="#FF0000">
+
+<CENTER>
+<BLOCKQUOTE>&nbsp;
+<TABLE CELLSPACING=0 CELLPADDING=5 WIDTH="90%" BGCOLOR="#6A9BED" NOSAVE >
+<TR NOSAVE>
+<TD NOSAVE>
+<CENTER><A NAME="links"></A><I><FONT COLOR="#000000"><FONT SIZE=+4> Camera Calibration Toolbox for Matlab</FONT></FONT></I></CENTER>
+</TD>
+</TR>
+</TABLE>
+&nbsp;</BLOCKQUOTE>
+</CENTER>
+
+
+<H1><IMG SRC="../gifs/starroll.gif" width="20" height="18"> Description of the functions in the calibration toolbox</H1>
+
+The following table gives a short description of the main functions in the calibration toolbox, and their associated matlab script files (<b>.m</b> files) in standard and memory efficient modes.
+<BR><BR>
+For a more complete description of those functions (when to use them, input/output, ...) visit <a href="example.html">the first example page</a>.<BR><BR>
+<center>
+<table border=3 width = "100%">
+<tr>
+<td>
+<center><b>Button name</b></center>
+</td>
+<td>
+<center><b>Matlab file name <BR>(in standard mode)</b></center>
+</td>
+<td>
+<center><b>Matlab file name <BR>(in memory efficient mode)</b></center>
+</td>
+<td>
+<center><b>Short description</b></center>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>
+<center><b>calib_gui.m</b></center>
+</td>
+<TD></TD>
+<td>
+<align="left"><BR>Launchs the main mode selection window for the calibration toolbox<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>
+<center><b>calib_gui_normal.m</b></center>
+</td>
+<TD><center><b>calib_gui_no_read.m</b></center>
+</TD>
+<td>
+<align="left"><BR>Launchs the main camera calibration toolbox (in standard or memory efficient mode)<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Image names</b></center>
+</td>
+<td>
+<center><b>data_calib.m</b></center>
+</td>
+<td>
+<center><b>data_calib_no_read.m</b></center>
+</td>
+<td>
+<align="left"><BR>Lets the user input the calibration image file names<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Read images</b></center>
+</td>
+<td>
+<center><b>ima_read_calib.m</b></center>
+</td>
+<td>
+<center><b>ima_read_calib_no_read.m</b></center>
+</td>
+<td>
+<align="left"><BR>Reads in the images from files. In memory efficient mode, this function only checks the content of the current folder.<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Extract grid corners</b></center>
+</td>
+<td>
+<center><b>click_calib.m</b></center>
+</td>
+<td>
+<center><b>click_calib_no_read.m</b></center>
+</td>
+<td>
+<align="left"><BR>Extracts the grid corners from images<BR><BR></align>
+</td>
+</tr>
+<!-- <tr>
+<td>
+<center><b>Initialization</b></center>
+</td>
+<td>
+<center><b>init_calib_param.m</b></center>
+</td>
+<td>
+<center><b>init_calib_param.m</b></center>
+</td>
+<td>
+<align="left"><BR>Computes a closed-form calibration solution (approximate solution)<BR><BR></align>
+</td>
+</tr>
+-->
+<tr>
+<td>
+<center><b>Calibration</b></center>
+</td>
+<td>
+<center><b>go_calib_optim.m</b></center>
+</td>
+<td>
+<center><b>go_calib_optim_no_read.m</b></center>
+</td>
+<td>
+<align="left"><BR>Computes the final intrinsic and extrinsic calibration parameters by minimizing the reprojection error (through gradient descent)<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Show Extrinsic</b></center>
+</td>
+<td>
+<center><b>ext_calib.m</b></center>
+</td>
+<td>
+<center><b>ext_calib.m</b></center>
+</td>
+<td>
+<align="left"><BR>Plots the extrinsic parameters (3D positions of the grids with respect to the camera)<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Reproject on images</b></center>
+</td>
+<td>
+<center><b>reproject_calib.m</b></center>
+</td>
+<td>
+<center><b>reproject_calib_no_read.m</b></center>
+</td>
+<td>
+<align="left"><BR>Plots the reprojections of the calibration grids onto the images<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Analyse error</b></center>
+</td>
+<td>
+<center><b>analyse_error.m</b></center>
+</td>
+<td>
+<center><b>analyse_error.m</b></center>
+</td>
+<td>
+<align="left"><BR>Error inspection tool (to identify points with large errors)<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Recomp.corners</b></center>
+</td>
+<td>
+<center><b>recomp_corner_calib.m</b></center>
+</td>
+<td>
+<center><b>recomp_corner_calib_no_read.m</b></center>
+</td>
+<td>
+<align="left"><BR>Recomputes the image corners for a specific image, or all images<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Add/Suppress images</b></center>
+</td>
+<td>
+<center><b>add_suppress.m</b></center>
+</td>
+<td>
+<center><b>add_suppress.m</b></center>
+</td>
+<td>
+<align="left"><BR>Tool that allows to activate and de-activate images<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Save</b></center>
+</td>
+<td>
+<center><b>saving_calib.m</b></center>
+</td>
+<td>
+<center><b>saving_calib.m</b></center>
+</td>
+<td>
+<align="left"><BR>Saves the calibration results (intrinsic and extrinsic) under the matlab file <b>Calib_Results.mat<b><BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Load</b></center>
+</td>
+<td>
+<center><b>loading_calib.m</b></center>
+</td>
+<td>
+<center><b>loading_calib.m</b></center>
+</td>
+<td>
+<align="left"><BR>Loads the calibration results from the matlab file <b>Calib_Results.mat<b><BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Exit</b></center>
+</td>
+<td>
+<center><b></b></center>
+</td>
+<td>
+<center><b></b></center>
+</td>
+<td>
+<align="left"><BR>Closes the calibration tool window (run <b>calib_gui</b>, <B>calib_gui_normal</B> or <B>calib_gui_no_read</B> to re-start the tool)<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Comp. Extrinsic</b></center>
+</td>
+<td>
+<center><b>extrinsic_computation.m</b></center>
+</td>
+<td>
+<center><b>extrinsic_computation.m</b></center>
+</td>
+<td>
+<align="left"><BR>Computes the extrinsic parameters for an image assuming known intrinsic parameters<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Undistort image</b></center>
+</td>
+<td>
+<center><b>undistort_image.m</b></center>
+</td>
+<td>
+<center><b>undistort_image_no_read.m</b></center>
+</td>
+<td>
+<align="left"><BR>Undistorts an image assuming known intrinsic parameters<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Export calib data</b></center>
+</td>
+<td>
+<center><b>export_calib_data.m</b></center>
+</td>
+<td>
+<center><b>export_calib_data.m</b></center>
+</td>
+<td>
+<align="left"><BR>Exports the calibration data (image points + world coordinates) into formats compatible with Willson-Heikkilä's and Zhang's calibration programs<BR><BR></align>
+</td>
+</tr>
+<tr>
+<td>
+<center><b>Show calib results</b></center>
+</td>
+<td>
+<center><b>show_calib_results.m</b></center>
+</td>
+<td>
+<center><b>show_calib_results.m</b></center>
+</td>
+<td>
+<align="left"><BR>Shows the current calibration parameters (focal, principal point, skew, distortion coefficients) and their uncertainties<BR><BR></align>
+</td>
+</tr>
+
+</table>
+</center>
+
+<BR><BR>
+
+
+
+<HR>
+
+<P><FONT SIZE=+3><A HREF="../index.html#functions">Back to main calibration page</A></FONT>
+</P>
+
+
+</BODY>
+</HTML>

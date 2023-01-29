@@ -1,0 +1,950 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.61 [en] (WinNT; I) [Netscape]">
+   <title>Camera Calibration Toolbox for Matlab</title>
+<!-- Changed by: Jean-Yves Bouguet,  9-Jul-1999 -->
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000CC" vlink="#0000FF" alink="#FF0000">
+
+<blockquote>&nbsp;
+<center><table CELLSPACING=0 CELLPADDING=5 WIDTH="90%" BGCOLOR="#6A9BED" NOSAVE >
+<tr NOSAVE>
+<td NOSAVE>
+<center><a NAME="links"></a><i><font color="#000000"><font size=+4>Camera
+Calibration Toolbox for Matlab</font></font></i></center>
+</td>
+</tr>
+</table></center>
+</blockquote>
+
+<h1>
+<img SRC="../gifs/starroll.gif" width="20" height="18" > Description of the calibration
+parameters</h1> After calibration, the list of parameters may be
+stored in the matab file <b>Calib_Results</b> by clicking on
+<b>Save</b>. The list of variables may be separated into two
+categories: Intrinsic parameters and extrinsic parameters.
+<p>
+
+<b><font size=+2>Intrinsic parameters (camera model):</font></b> <p>The internal
+camera model is very similar to that used by <a
+href="http://www.ee.oulu.fi/~jth/">Heikkilä</a> and <a
+href="http://www.ee.oulu.fi/~olli/">Silven</a> at the <a
+href="http://www.ee.oulu.fi/">University of Oulu</a> in Finland. Visit
+their online <a
+href="http://www.ee.oulu.fi/~jth/calibr/Calibration.html">calibration
+page</a>, and their <a
+href="http://www.ee.oulu.fi/~jth/doc/">publication page</a>. We
+specifically recommend their CVPR'97 paper: <a href="../papers/heikkila97.pdf">A
+Four-step Camera Calibration Procedure with Implicit Image
+Correction</a>. <BR>
+
+
+<p>
+
+<font size=+1>The list of internal
+parameters:</font>
+<ul>
+<li>
+<b><font size=+0>Focal length:</font></b> The focal length in pixels is
+stored in the 2x1 vector <b>fc</b>.<!-- The quantities <b>fc(1)</b> and <b>fc(2)</b> are the horizontal and vertical focal length (in x and y) in pixels. --></li>
+
+<li>
+<b><font size=+0>Principal point:</font></b> The principal point coordinates
+are stored in the 2x1 vector <b>cc</b>.</li>
+
+<li>
+<b><font size=+0>Skew coefficient:</font></b> The skew coefficient defining the angle between the x and y pixel axes is stored in the scalar <b>alpha_c</b>.</li>
+
+<li>
+<b><font size=+0>Distortions:</font></b> The image distortion coefficients
+(radial and tangential distortions) are stored in the 5x1 vector <b>kc</b>.</li>
+</ul>
+
+<p><br><font size=+1>Definition of the intrinsic parameters:</font>
+<p>Let <b>P</b> be a point in space of coordinate vector <b>XX<sub>c</sub>
+= [X<sub>c</sub>;Y<sub>c</sub>;Z<sub>c</sub>]</b> in the camera reference
+frame.
+<br>Let us project now that point on the image plane according to the intrinsic
+parameters (<b>fc</b>,<b>cc</b>,<b>alpha_c</b>,<b>kc</b>).
+<br>Let <b>x<sub>n</sub></b> be the normalized (pinhole) image projection:
+<br>&nbsp;
+
+<!--
+<center><table>
+<tr>
+<td><b>x<sub>n</sub></b></td>
+<td><b> = </b></td>
+
+<td>
+<center><table>
+<tr>
+<td><b>[</b></td>
+</tr>
+
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+</table></center>
+</td>
+
+<td>
+<center><table>
+<tr>
+<td>
+<center><table><tr><td>
+<b>X<sub>c</sub>/Z<sub>c</sub></b>
+</td></tr></table></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><table><tr><td>
+<b>Y<sub>c</sub>/Z<sub>c</sub></b>
+</td></tr></table></center>
+</td>
+</tr>
+</table></center>
+</td>
+
+<td>
+<center><table>
+<tr>
+<td><b>]</b></td>
+</tr>
+
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+</table></center>
+</td>
+
+<td><b>=&nbsp;</b></td>
+
+<td>
+<center><table>
+<tr>
+<td><b>[</b></td>
+</tr>
+
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+</table></center>
+</td>
+
+<td>
+<center><table>
+<tr>
+<td>
+<center><table><tr><td>
+<b>x</b>
+</td></tr></table></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><table><tr><td><center><table><tr><td>
+<b>y</b>
+</td></tr></table></center></td></tr></table></center>
+</td>
+</tr>
+</table></center>
+</td>
+
+<td>
+<center><table>
+<tr>
+<td><b>]</b></td>
+</tr>
+
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+</table></center>
+</td>
+</tr>
+</table></center>
+
+-->
+
+<center><img SRC="eq1.gif" ></center>
+
+
+<p>Let <b>r<sup>2</sup> = x<sup>2</sup> + y<sup>2</sup></b>.
+<br>After including lens distortion, the new normalized point coordinate
+<b>x<sub>d</sub></b>
+is defined as follows:<br>
+
+<!--
+
+<center>
+<table>
+<tr>
+
+<td>
+<b>x<sub>d</sub> 
+</td>
+
+<td>
+<b> = </b>
+</td>
+
+<td>
+<center><table>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+</table></center>
+</td>
+
+
+<td>
+<center><table>
+<tr>
+<td><center><b>x<sub>d</sub>(1)</b></center></td>
+</tr>
+<tr>
+<td><center><b>x<sub>d</sub>(2)</b></center></td>
+</tr>
+</table></center>
+</td>
+
+
+<td>
+<center><table>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+</table></center>
+</td>
+
+<td>
+<b>=</b>
+</td>
+
+<td>
+<b>(1 + kc(1)*r<sup>2</sup> + kc(2)*r<sup>4</sup> +
+kc(5)*r<sup>6</sup>) * x<sub>n</sub> + dx</b>
+</td>
+
+</tr>
+</table>
+</center> -->
+
+<center><img SRC="eq2.gif" ></center>
+
+
+<p>where <b>dx</b> is the tangential distortion vector:
+<br>&nbsp;
+<!--
+<center><table>
+<tr>
+<td><b>dx</b></td>
+<td><b> = </b></td>
+
+<td>
+<center><table>
+<tr>
+<td><b>[</b></td>
+</tr>
+
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+</table></center>
+</td>
+
+<td>
+<center><table>
+<tr>
+<td>
+<center><table><tr><td>
+<b>2*kc(3)*x*y + kc(4)*(r<sup>2</sup> + 2*x<sup>2</sup>)</b>
+</td></tr></table></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><table><tr><td>
+<b>kc(3)*(r<sup>2</sup> + 2*y<sup>2</sup>) + 2*kc(4)*x*y</b>
+</td></tr></table></center>
+</td>
+</tr>
+</table></center>
+</td>
+
+<td>
+<center><table>
+<tr>
+<td><b>]</b></td>
+</tr>
+
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+</table></center>
+</td>
+</tr>
+</table></center>
+-->
+
+<center><img SRC="eq3.gif" ></center>
+
+
+
+<p>Therefore, the 5-vector <b>kc</b> contains both radial and tangential distortion coefficients (observe that the coefficient of 6<sup>th</sup> order radial distortion term is the fifth entry of the vector <b>kc</b>).<BR>
+
+It is worth noticing that this distortion model was first introduced
+by Brown in 1966 and called "Plumb Bob" model (radial polynomial +
+"thin prism" ). The tangential distortion is due to "decentering", or imperfect centering of the lens components and other manufacturing defects in a compound lens. For more details, refer to Brown's original publications
+listed in the <a href="ref.html">reference page</a>.
+
+<p>Once distortion is applied, the final pixel coordinates <b>x_pixel = [x<sub>p</sub>;y<sub>p</sub>]</b>
+of the projection of <b>P</b> on the image plane is:
+<br>&nbsp;
+<!--
+<center><table>
+<tr>
+<td>
+<align="left"><b>x<sub>p</sub> = fc(1)*(x<sub>d</sub>(1) + alpha_c*x<sub>d</sub>(2)) + cc(1)</b></align>
+</td>
+</tr>
+
+<tr>
+<td>
+<align="left"><b>y<sub>p</sub> = fc(2)*x<sub>d</sub>(2) + cc(2)</b></align>
+</td>
+</tr>
+</table></center>
+-->
+
+
+<center><img SRC="eq4.gif" ></center>
+
+
+<BR>
+
+Therefore, the pixel coordinate vector <b>x_pixel</b> and the normalized (distorted) coordinate vector <b>x<sub>d</sub></b> are related to each other through the linear equation:
+<BR>
+
+<!--
+<center>
+<table>
+<tr>
+<td>
+<center><table>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+</table></center>
+</td>
+
+
+<td>
+<center><table>
+<tr>
+<td><center><b>x<sub>p</sub></b></center></td>
+</tr>
+<tr>
+<td><center><b>y<sub>p</sub></b></center></td>
+</tr>
+<tr>
+<td><center><b>1</b></td>
+</tr>
+</table></center>
+</td>
+
+
+<td>
+<center><table>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+</table></center>
+</td>
+
+
+<td>
+<center><b>=</b></center>
+</td>
+
+
+<td>
+<center><b>KK</b></center>
+</td>
+<td>
+<center><b>.</b></center>
+</td>
+
+<td>
+<center><table>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+</table></center>
+</td>
+
+
+<td>
+<center><table>
+<tr>
+<td><center><b>x<sub>d</sub>(1)</b></center></td>
+</tr>
+<tr>
+<td><center><b>x<sub>d</sub>(2)</b></center></td>
+</tr>
+<tr>
+<td><center><b>1</b></center></td>
+</tr>
+</table></center>
+</td>
+
+
+<td>
+<center><table>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+</table></center>
+</td>
+
+
+</tr>
+</table>
+</center>
+-->
+
+<center><img SRC="eq5.gif" ></center>
+
+
+<BR>
+where <b>KK</b> is known as the camera matrix, and defined as follows:
+<br>
+
+<BR>
+
+<!--
+<center>
+<table>
+
+<tr>
+
+<td>
+<center><b>KK</b></center>
+</td>
+
+<td>
+<center><b>=</b></center>
+</td>
+
+
+<td>
+<center><table>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+<tr>
+<td><b>[</b></td>
+</tr>
+</table></center>
+</td>
+
+
+<td>
+<center>
+<table>
+
+<tr>
+<td>
+<center><table><tr><td><center><table><tr><td>
+<center><b>fc(1)</b></center>
+</td></tr></table></center></td></tr></table></center>
+</td>
+<td>
+<center><table><tr><td><center><table><tr><td>
+<center><b>alpha_c * fc(1)</b><center>
+</td></tr></table></center></td></tr></table></center>
+</td>
+<td>
+<center><table><tr><td><center><table><tr><td>
+<center><b>cc(1)</b><center>
+</td></tr></table></center></td></tr></table></center>
+</td>
+</tr>
+<tr>
+<td>
+<center><table><tr><td><center><table><tr><td>
+<center><b>0</b><center>
+</td></tr></table></center></td></tr></table></center>
+</td>
+<td>
+<center><table><tr><td><center><table><tr><td>
+<center><b>fc(2)</b><center>
+</td></tr></table></center></td></tr></table></center>
+</td>
+<td>
+<center><table><tr><td><center><table><tr><td>
+<center><b>cc(2)</b><center>
+</td></tr></table></center></td></tr></table></center>
+</td>
+</tr>
+<tr>
+<td>
+<center><table><tr><td><center><table><tr><td>
+<center><b>0</b><center>
+</td></tr></table></center></td></tr></table></center>
+</td>
+<td>
+<center><table><tr><td><center><table><tr><td>
+<center><b>0</b><center>
+</td></tr></table></center></td></tr></table></center>
+</td>
+<td>
+<center><table><tr><td><center><table><tr><td>
+<center><b>1</b><center>
+</td></tr></table></center></td></tr></table></center>
+</td>
+</tr>
+</table>
+</center>
+</td>
+
+
+<td>
+<center><table>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+<tr>
+<td><b>]</b></td>
+</tr>
+</table></center>
+</td>
+
+</tr>
+
+</table>
+</center>
+-->
+
+<center><img SRC="eq6.gif" ></center>
+
+
+<BR>In matlab, this matrix is stored in the variable <b>KK</b> after
+calibration. Observe that <b>fc(1)</b> and <b>fc(2)</b> are the focal
+distance (a unique value in mm) expressed in units of horizontal and vertical
+pixels. Both components of the vector <B>fc</B> are usually very similar. The ratio <B>fc(2)/fc(1)</B>, often called "aspect ratio", is different from 1 if the pixel in the CCD array are not square. Therefore, the camera model naturally handles non-square
+pixels. In addition, the coefficient <b>alpha_c</b> encodes the angle
+between the x and y sensor axes. Consequently, pixels are even allowed
+to be non-rectangular. Some authors refer to that type of model as
+"affine distortion" model. 
+
+<BR><BR>
+In addition to computing estimates for the intrinsic parameters <B>fc</B>, <B>cc</B>, <B>kc</B> and <B>alpha_c</B>, the toolbox also returns estimates of the uncertainties on those parameters. The matlab variables containing those uncertainties are <B>fc_error</B>, <B>cc_error</B>, <B>kc_error</B>, <B>alpha_c_error</B>. For information, those vectors are approximately three times the standard deviations of the errors of estimation.
+<BR><BR>
+Here is an example of output of the toolbox after optimization:
+<BR><BR>
+<align="left"><IMG SRC="../gifs/intrinsics_example.gif"></align>
+<BR><BR>
+In this case <B>fc = [657.30254 ; 657.74391]</B> and <B>fc_error = [0.28487 ; 0.28937]</B>, <B>cc = [302.71656 ; 242.33386]</B>, <B>cc_error = [0.59115 ; 0.55710]</B>, ...
+
+
+<BR><BR><BR>
+
+<p><B><FONT color="#ff0000" size=+1><i>Important Convention: </i></FONT></B>Pixel coordinates are defined such that <b>[0;0]</b> is the
+center of the upper left pixel of the image. As a result, 
+<b>[nx-1;0]</b> is center of the upper right corner pixel, <b>[0;ny-1]</b> is
+the center of the lower left corner pixel and <b>[nx-1;ny-1]</b> is the center of the lower right
+corner pixel where <b>nx</b> and <b>ny</b> are the width and height of
+the image (for the images of the first example, <b>nx=640</b> and
+<b>ny=480</b>). One matlab function provided in the toolbox computes
+that direct pixel projection map. This function is
+<b>project_points2.m</b>. This function takes in the 3D coordinates of
+a set of points in space (in world reference frame or camera reference
+frame) and the intrinsic camera parameters
+(<b>fc</b>,<b>cc</b>,<b>kc</b>,<b>alpha_c</b>), and returns the pixel
+projections of the points on the image plane. See the information
+given in the function.
+
+ 
+<br>&nbsp; <p><font size=+1>The inverse mapping:</font> <p>The inverse
+problem of computing the normalized image projection vector
+<b>x<sub>n</sub></b> from the pixel coordinate <b>x_pixel</b> is very
+useful in most machine vision applications. However, because of the high degree distortion model, there exists no general algebraic expression for this inverse map (also called normalization). In
+the toolbox however, a numerical implementation of inverse mapping is provided in the form of a function:
+<b>normalize.m</b>. Here is the way the function should be called:
+<b>x<sub>n</sub> = normalize(x_pixel,fc,cc,kc,alpha_c)</b>.  In that
+syntax, <b>x_pixel</b> and <b>x<sub>n</sub></b> may consist of more
+than one point coordinates. For an example of call, see the matlab
+function <b>compute_extrinsic_init.m</b>.
+
+
+
+<BR><BR><BR>
+<P><font size=+1>Reduced camera models:</font></P>
+Currently manufactured cameras do not always justify this very general optical model. For example, it now customary to assume rectangular pixels, and thus assume zero skew (<B>alpha_c=0</B>). It is in fact a default setting of the toolbox (the skew coefficient not being estimated).
+Furthermore, the very generic (6th order radial + tangential) distortion model is often not considered completely. For standard field of views (non wide-angle cameras), it is often not necessary (and not recommended) to push the radial component of distortion model beyond the 4th order (i.e. keeping <B>kc(5)=0</B>). This is also a default setting of the toolbox. In addition, the tangential component of distortion can often be discarded (justified by the fact that most lenses currently manufactured do not have imperfection in centering).
+The 4th order symmetric radial distortion with no tangential component (the last three component of <B>kc</B> are set to zero) is actually the distortion model used by <A href="ref.html">Zhang</A>. Another very common distortion model for good optical systems or narrow field of view lenses is the second order symmetric radial distortion model. In that model, only the first component of the vector <B>kc</B> is estimated, while the other four are set to zero. This model is also commonly used when a few images are used for calibration (too little data to estimate a more complex model). 
+Aside from distortions and skew, other model reductions are possible. For example, when only a few images are used for calibration (e.g. one, two or three images) the principal point <b>cc</b> is often very difficult to estimate reliably . It is known to be one of the most difficult part of the native perspective projection model to estimate (ignoring lens distortions). If this is the case, it is sometimes better (and recommended) to set the principal point at the center of the image (<B>cc = [(nx-1)/2;(ny-1)/2]</B>) and not estimate it further. Finally, in few rare instances, it may be necessary to reject the aspect ratio <B>fc(2)/fc(1)</B> from the estimation. Although this final model reduction step is possible with the toolbox, it is generally not recommended as the aspect ratio is often 'easy' to estimate very reliably. For more information on how to perform model selection with the toolbox, visit the <A href="example.html">page describing the first calibration example</A>.
+
+<br>&nbsp; 
+
+<p><font size=+1>Correspondence with Heikkilä's notation:</font> <p>In the
+original <a href="../papers/heikkila97.pdf">Heikkilä's paper</a>, the internal
+parameters appear with slightly different names. The following table
+gives the correspondence between the two notation schemes: <br>&nbsp;
+<center><table BORDER=3 WIDTH="50%" >
+<tr>
+<td>
+<center><b>Our notation</b></center>
+</td>
+
+<td>
+<center><b>Heikkilä's notation</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>fc(1)</b></center>
+</td>
+
+<td>
+<center><b>f . Du . su</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>fc(2)</b></center>
+</td>
+
+<td>
+<center><b>f . Dv</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>cc(1)</b></center>
+</td>
+
+<td>
+<center><b>u0</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>cc(2)</b></center>
+</td>
+
+<td>
+<center><b>v0</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>alpha_c</b></center>
+</td>
+
+<td>
+<center><b>0</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>kc(1)</b></center>
+</td>
+
+<td>
+<center><b>f<SUP>3</SUP> . k1</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>kc(2)</b></center>
+</td>
+
+<td>
+<center><b>f<SUP>5</SUP> . k2</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>kc(3)</b></center>
+</td>
+
+<td>
+<center><b>f<SUP>2</SUP> . p1</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>kc(4)</b></center>
+</td>
+
+<td>
+<center><b>f<SUP>2</SUP> . p2</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>kc(5)</b></center>
+</td>
+
+<td>
+<center><b>0</b></center>
+</td>
+</tr>
+</table></CENTER>
+<BR>
+A few comments on Heikkilä's model:
+<UL>
+<LI>Skew is not estimated (<B>alpha_c=0</B>). It may not be a problem as most cameras currently manufactured do not have centering imperfections.</LI>
+<LI>The radial component of the distortion model is only up to the 4th order. This is sufficient for most cases.</LI>
+<LI>The four variables <b>(f,Du,Dv,su)</b> replacing the <B>2x1</b> focal vector <B>fc</B> are in general impossible to estimate separately. It is only possible if two of those variables are known (for example the metric focal value <B>f</B> and the scale factor <B>su</B>). See <a href="../papers/heikkila97.pdf">Heikkilä's paper</a> for more information.</LI>
+</UL>
+<BR>
+
+<p><font size=+1>Correspondence with Reg Willson's notation:</font>
+<p>In his original <a href="http://www-cgi.cs.cmu.edu/afs/cs.cmu.edu/user/rgw/www/TsaiCode.html">implementation
+of the Tsai camera calibration algorithm</a>, <a href="http://www.cs.cmu.edu/~rgw/">Reg
+Willson</a> uses a different notation for the camera parameters. The following
+table gives the correspondence between the two notation schemes:
+<br>&nbsp;
+<center><table BORDER=3 WIDTH="50%" >
+<tr>
+<td>
+<center><b>Our notation</b></center>
+</td>
+
+<td>
+<center><b>Willson's notation</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>fc(1)</b></center>
+</td>
+
+<td>
+<center><b>f . sx / dpx</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>fc(2)</b></center>
+</td>
+
+<td>
+<center><b>f / dpy</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>cc(1)</b></center>
+</td>
+
+<td>
+<center><b>Cx</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>cc(2)</b></center>
+</td>
+
+<td>
+<center><b>Cy</b></center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center><b>alpha_c</b></center>
+</td>
+
+<td>
+<center><b>0</b></center>
+</td>
+</tr>
+
+</table></center>
+
+<p>Willson uses a first order radial distortion model (with an additional
+constant <b>kappa1</b>) that does not have an easy closed-form corespondence
+with our distortion model (encoded with the coefficients
+<b>kc(1)</b>,...,<b>kc(5)</b>).
+However, we included in the toolbox a function called <b>willson_convert</b>
+that converts the entire set of Willson's parameters into our parameters
+(including distortion). This function is called in another function <b>willson_read</b>
+that directly loads in a calibration result file generated by Willson's
+code and computes the set parameters (intrinsic and extrinsic) following
+our notation (to use that function, first set the matlab variable
+<b>calib_file</b>
+to the name of the original willson calibration file).
+<BR>
+<BR>
+A few extra comments on Willson's model:
+<UL>
+<LI>Similarly to Heikkilä's model, the skew is not included in the model (<B>alpha_c=0</B>).</LI>
+<LI>Similarly to Heikkilä's model, the four variables <b>(f,sx,dpx,dpy)</b> replacing the <B>2x1</b> focal vector <B>fc</B> are in general impossible to estimate separately. It is only possible if two of those variables are known (for example the metric focal value <B>f</B> and the scale factor <B>sx</B>).</LI>
+</UL>
+
+<br>&nbsp;
+<p><b><font size=+2>Extrinsic parameters:</font></b>
+<ul>
+<li>
+<b><font size=+0>Rotations:</font></b> A set of <b>n_ima</b> 3x3 rotation
+matrices <b>Rc_1</b>, <b>Rc_2</b>,.., <b>Rc_20</b> (assuming <b>n_ima=20</b>).</li>
+
+<li>
+<b><font size=+0>Translations:</font></b> A set of <b>n_ima</b> 3x1 vectors
+<b>Tc_1</b>,
+<b>Tc_2</b>,.., <b>Tc_20</b> (assuming <b>n_ima=20</b>).</li>
+</ul>
+
+<p><br><font size=+1>Definition of the extrinsic parameters:</font>
+<p>Consider the calibration grid <b>#i</b> (attached to the <b>i</b>th
+calibration image), and concentrate on the camera reference frame attahed
+to that grid.
+<br>Without loss of generality, take <b>i = 1</b>. The following figure
+shows the reference frame <b>(O,X,Y,Z)</b> attached to that calibration
+gid.
+<center>
+<p><img SRC="../gifs/extrinsic_def.gif" ></center>
+
+<p><br>
+<p>Let <b>P</b> be a point space of coordinate vector <b>XX = [X;Y;Z]</b>
+in the grid reference frame (reference frame shown on the previous figure).
+<br>Let <b>XX<sub>c</sub> = [X<sub>c</sub>;Y<sub>c</sub>;Z<sub>c</sub>]</b>
+be the coordinate vector of <b>P</b> in the camera reference frame.
+<br>Then <b>XX</b> and <b>XX<sub>c</sub></b> are related to each other
+through the following rigid motion equation:
+<center>
+<p><b>XX<sub>c</sub> = Rc_1 * XX + Tc_1</b></center>
+
+<p>In particular, the translation vector <b>Tc_1</b> is the coordinate
+vector of the origin of the grid pattern (<b>O</b>) in the camera reference
+frame, and the thrid column of the matrix <b>Rc_1</b> is the surface normal
+vector of the plane containing the planar grid in the camera reference
+frame.
+<br>The same relation holds for the remaining extrinsic parameters (<b>Rc_2</b>,<b>Tc_2</b>),
+(<b>Rc_3</b>,<b>Tc_3</b>), ... , (<b>Rc_20</b>,<b>Tc_20</b>).
+<br>Once the coordinates of a point is expressed in the camera reference
+frame, it may be projected on the image plane using the intrinsic camera
+parameters.
+<br>The vectors <b>omc_1</b>, <b>omc_1</b>, ... , <b>omc_20</b> are the
+rotation vectors associated to the rotation matrices <b>Rc_1</b>, <b>Rc_1</b>,
+... , <b>Rc_20</b>. The two are related through the rodrigues formula.
+For example, <b>Rc_1 = rodrigues(omc_1)</b>.
+
+<BR><BR>
+Similarly to the intrinsic parameters, the uncertainties attached to the estimates of the extrinsic parameters <B>omc_i</B>, <B>Tc_i</B> (<B>i=1,...,n_ima</B>) are also computed by the toolbox. Those uncertainties are stored in the vectors <B>omc_error_1</B>,..., <B>omc_error_20</B>, <B>Tc_error_1</B>,..., <B>Tc_error_20</B> (assuming <B>n_ima = 20</B>) and represent approximately three times the standard deviations of the errors of estimation.
+
+<p>
+<hr>
+<p><font size=+3><a href="../index.html#parameters" >Back to main calibration
+page</a></font>
+</body>
+</html>
